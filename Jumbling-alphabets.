@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+int main() {
+    int numberoftestCases;
+    int i=0;
+    int k,j;
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
+    
+    scanf("%d",&numberoftestCases);
+       
+while(i<numberoftestCases)  
+{
+    char inputSting[30]; 
+    char compareString[30];
+   scanf("%s", inputSting); 
+ 
+    
+     scanf("%s", compareString); 
+    
+for (j = 0; j < strlen(inputSting); j++){
+    
+    for(k = 0; k < strlen(compareString); k++){
+        
+        if(inputSting[j]==compareString[k])
+            printf("%c",inputSting[j]);
+    }
+    
+ }
+    
+    i++;
+}
+    return 0;
+}

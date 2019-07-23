@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  	<aop:config>
+		<aop:pointcut id="serviceOperation"
+			expression="execution(* com.rail.assist.serviceImplementation.*.*(..)) " />
+		<aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice" />
+	</aop:config>
+	
+	
+
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="*" rollback-for="java.lang.Throwable"/>
+		</tx:attributes>
+	</tx:advice> 
+	 
+	
+<!-- 	
+	<aop:config>
+		<aop:pointcut id="serviceOperation"
+			expression="execution(* com.sfms.sfmsbr.utils.UpdateUserStatus.*(..)) || execution(* com.sfms.sfmsbr.service.*.*.*.*.*(..)) || execution(* com.sfms.sfmsbr.service.*.*.*.*(..)) || execution(* com.sfms.sfmsbr.service.*.*Service*.*(..)) || execution(* com.sfms.sfmsbr.bankapi.processmtmessages.*.*(..))" />
+		<aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice" />
+	</aop:config>
+	
+	|| execution(* com.rail.assist.controller.*.*(..))
+
+
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="count*" propagation="NEVER" />
+			<tx:method name="*" rollback-for="java.lang.Throwable"/>
+		</tx:attributes>
+	</tx:advice> -->
+
+<bean id="logAspect" class="com.rail.assist.aspect.ASSISTLoggingAspect" />
+	
+	<aop:config>
+
+		<aop:pointcut
+				expression="execution(* com.rail.assist.controller.*.*(..)) || execution(* com.rail.assist.service.*.*(..))"
+				id="logPointCutService" />	
+				
+		<aop:aspect id="aspectLogNExceptionForService" ref="logAspect">
+
+			<aop:before method="logBefore" pointcut-ref="logPointCutService" />
+
+			<aop:after-returning method="logAfter" pointcut-ref="logPointCutService" returning="retVal"/>
+
+			<aop:after-throwing method="logException"
+				pointcut-ref="logPointCutService" throwing="error" />
+
+		</aop:aspect>
+	</aop:config>
+
+</beans>

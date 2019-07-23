@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<Appenders>
+		<Console name="assistconsole" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+		<Routing name="AssistWebRouting">
+			<Routes pattern="$${ctx:assistweblogname}">
+				<Route key="$${ctx:assistweblogname}">
+					<RollingFile name="Rolling-ASSISTdefaultlog" fileName="E:/RailAssistApplication/Logs/${date:yyyy-MM-dd}/Assist-DefaultLog.log"
+						filePattern="E:/RailAssistApplication/Logs/${date:yyyy-MM-dd}/ASSIST-DefaultLog-%d{yyyy-MM-dd}-%i.log.gz">
+						<PatternLayout>
+							<pattern>%d{dd MMM yyyy HH:mm:ss,SSS} [%t] %p %c{7} - %m%n</pattern>
+						</PatternLayout>
+						<Policies>
+							<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+							<SizeBasedTriggeringPolicy size="100MB" />
+						</Policies>
+					</RollingFile>
+				</Route>
+				<Route>
+					<RollingFile name="Rolling-${ctx:assistweblogname}" fileName="E:/RailAssistApplication/Logs/ASSIST-${ctx:assistweblogname}.log"
+						filePattern="E:/RailAssistApplication/Logs/${date:yyyy-MM-dd}/ASSIST-${ctx:assistweblogname}-%d{yyyy-MM-dd-HH}-%i.log.gz">
+						<PatternLayout>
+							<pattern>%d{dd MMM yyyy HH:mm:ss,SSS} %p %c{7} - %m%n</pattern>
+						</PatternLayout>
+						<Policies>
+							<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+							<SizeBasedTriggeringPolicy size="100MB" />
+						</Policies>
+					</RollingFile>
+				</Route>
+			</Routes>
+		</Routing>
+	</Appenders>
+	<Loggers>
+		<Root level="ERROR">
+			<AppenderRef ref="assistconsole" />
+		</Root>
+		<Logger name="com.rail.assist" level="DEBUG" additivity="false">
+	      <AppenderRef ref="AssistWebRouting"/>
+		</Logger>
+		<Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+	      <AppenderRef ref="AssistWebRouting"/>
+		</Logger>
+		<Logger name="org.hibernate.type.descriptor.sql" level="DEBUG" additivity="false">
+	      <AppenderRef ref="AssistWebRouting"/>
+		</Logger>
+		<!--Logger name="org.springframework" level="DEBUG">
+	      <AppenderRef ref="ASSISTconsole"/>
+		</Logger-->
+	</Loggers>
+</Configuration>
